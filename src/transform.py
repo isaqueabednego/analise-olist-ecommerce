@@ -12,17 +12,19 @@ def tratar_pedidos(orders, order_items, payments, reviews):
         orders["order_delivered_customer_date"]
         - orders["order_purchase_timestamp"]
     ).dt.days
+
     orders["atraso"] = (
         orders["order_delivered_customer_date"]
         > orders["order_estimated_delivery_date"]
     )
 
+    order_items = order_items.copy()
+    order_items["valor_item"] = order_items["price"] + order_items["freight_value"]
+
     reviews_agg = reviews.groupby("order_id")["review_score"].mean().reset_index()
-    payments_agg = payments.groupby("order_id")["payment_value"].sum().reset_index()
 
     fato = (
         order_items.merge(orders, on="order_id", how="left")
-        .merge(payments_agg, on="order_id", how="left")
         .merge(reviews_agg, on="order_id", how="left")
     )
 
