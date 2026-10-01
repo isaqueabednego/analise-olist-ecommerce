@@ -24,10 +24,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Executar Pipeline ETL
-      run: |
-        python src/main.py
-
     - name: Executar Testes Automatizados
       run: |
         pytest tests/
